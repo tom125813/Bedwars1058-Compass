@@ -10,14 +10,19 @@ import com.andrei1058.bedwars.api.events.gameplay.GameStateChangeEvent;
 import com.andrei1058.bedwars.api.events.player.PlayerKillEvent;
 import com.andrei1058.bedwars.api.events.player.PlayerLeaveArenaEvent;
 import com.andrei1058.bedwars.api.events.player.PlayerReSpawnEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 public class GameListener implements Listener {
@@ -67,8 +72,7 @@ public class GameListener implements Listener {
         IArena arena = e.getArena();
         if (e.getNewState().equals(GameState.playing)) {
             arena.getPlayers().forEach(this::addToInventory);
-        }
-        else if (e.getNewState().equals(GameState.restarting)) {
+        } else if (e.getNewState().equals(GameState.restarting)) {
             Compass.removeTrackingArena(arena);
         }
     }
@@ -81,6 +85,38 @@ public class GameListener implements Listener {
         if (data == null) return;
         if (data.equals("compass-item")) e.setCancelled(true);
     }
+
+    /*@EventHandler
+    public void onCompassDrop(PlayerDropItemEvent e) {
+        ItemStack is = e.getItemDrop().getItemStack();
+        if (is == null) return;
+        String data = new NBTItem(is).getString("data");
+        if (data == null) return;
+        if (!data.equals("compass-item")) return;
+
+        Player player = e.getPlayer();
+        Inventory inv = player.getInventory();
+
+        // Cancel the drop event
+        e.setCancelled(true);
+
+        // Clone the item
+        //ItemStack isClone = is.clone();
+
+        // Remove all similar items from the player's inventory
+        //inv.remove(is);
+
+        // Find first empty slot in the inventory
+        //int firstEmptySlot = inv.firstEmpty();
+        //if (firstEmptySlot != -1) {
+        //    // Add the cloned item back into the player's inventory at the first available slot
+        //    inv.setItem(firstEmptySlot, isClone);
+        //}
+
+        Bukkit.getServer().getScheduler().runTaskLater(Compass.getInstance(), () -> {
+            player.closeInventory();
+        }, 2L);
+    }*/
 
     public void addToInventory(Player p) {
         NBTItem nbti = new NBTItem(Compass.getMainConfig().getItem(p, MainConfig.COMPASS_ITEM, true, "compass-item"));

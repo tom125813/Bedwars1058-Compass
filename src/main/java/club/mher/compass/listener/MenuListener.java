@@ -31,16 +31,16 @@ public class MenuListener implements Listener {
 
     @EventHandler
     public void onCompass(InventoryClickEvent e) {
-        if (e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)) return;
-        NBTItem nbtItem = new NBTItem(e.getCurrentItem());
-        if (nbtItem.getString("data") == null) return;
-        if (!nbtItem.getString("data").equals("compass-item")) return;
-        if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) {
-            //e.setCancelled(true);
-            return;
-        }
-        if (e.getView().getTopInventory().getType() == InventoryType.CRAFTING && e.getView().getBottomInventory().getType() == InventoryType.PLAYER) return;
-        e.setCancelled(true);
+        //if (e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)) return;
+        //NBTItem nbtItem = new NBTItem(e.getCurrentItem());
+        //if (nbtItem.getString("data") == null) return;
+        //if (!nbtItem.getString("data").equals("compass-item")) return;
+        //if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) {
+        //    //e.setCancelled(true);
+        //    return;
+        //}
+        //if (e.getView().getTopInventory().getType() == InventoryType.CRAFTING && e.getView().getBottomInventory().getType() == InventoryType.PLAYER) return;
+        //e.setCancelled(true);
     }
 
     @EventHandler

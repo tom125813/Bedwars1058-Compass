@@ -17,6 +17,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
@@ -78,13 +79,82 @@ public class GameListener implements Listener {
     }
 
     @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (event.isShiftClick()) {
+            ItemStack is = event.getCurrentItem();
+            String data = new NBTItem(is).getString("data");
+
+            if (data != null && data.equals("compass-item")) {
+                Player player = (Player) event.getWhoClicked();
+                Inventory inv = player.getInventory();
+
+                if (event.getSlot() > 8) {
+                    int indexToMove = -1;
+                    for (int i = 8; i >= 0; i--) { // Look from the end of the bar (slot 8) to the start
+                        if (inv.getItem(i) == null) { // If there's space, that's our index
+                            indexToMove = i;
+                            break;
+                        }
+                    }
+
+                    if (indexToMove != -1) {
+                        event.setCancelled(true);
+                        inv.setItem(indexToMove, is);
+                        int finalIndexToMove = indexToMove;
+                        Bukkit.getServer().getScheduler().runTaskLater(Compass.getInstance(), ()->{inv.getItem(finalIndexToMove).setAmount(1);},1L);
+                        inv.clear(event.getSlot());
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+        ItemStack is = event.getItemDrop().getItemStack();
+        String data = new NBTItem(is).getString("data");
+
+        if (data != null && data.equals("compass-item")) {
+            Player player = event.getPlayer();
+            Inventory inv = player.getInventory();
+
+            // Get the current item slot from player hand
+            int dropSlot = player.getInventory().getHeldItemSlot();
+
+            // Here
+
+            int indexToMove = -1;
+            if (dropSlot > 8) {
+                for (int i = 8; i >= 0; i--) {
+                    if (inv.getItem(i) == null) {
+                        indexToMove = i;
+                        break;
+                    }
+                }
+            }
+
+            if (indexToMove != -1) {
+                inv.setItem(indexToMove, is);
+            } else {
+                for (int i = 9; i < 36; i++) {
+                    if (inv.getItem(i) == null) {
+                        inv.setItem(i, is);
+                        break;
+                    }
+                }
+            }
+            
+        }
+    }
+
+    /*@EventHandler
     public void onCompassDrop(ItemSpawnEvent e) {
         ItemStack is = e.getEntity().getItemStack();
         if (is == null) return;
         String data = new NBTItem(is).getString("data");
         if (data == null) return;
         if (data.equals("compass-item")) e.setCancelled(true);
-    }
+    }*/
 
     /*@EventHandler
     public void onCompassDrop(PlayerDropItemEvent e) {
@@ -120,7 +190,9 @@ public class GameListener implements Listener {
 
     public void addToInventory(Player p) {
         NBTItem nbti = new NBTItem(Compass.getMainConfig().getItem(p, MainConfig.COMPASS_ITEM, true, "compass-item"));
-        p.getInventory().setItem(nbti.getInteger("slot"), nbti.getItem());
+
+        if (!p.getInventory().contains(nbti.getItem()))
+            p.getInventory().setItem(nbti.getInteger("slot"), nbti.getItem());
     }
 
 }

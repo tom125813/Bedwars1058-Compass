@@ -78,7 +78,7 @@ public class GameListener implements Listener {
         }
     }
 
-    @EventHandler
+    /*@EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.isShiftClick()) {
             ItemStack is = event.getCurrentItem();
@@ -107,85 +107,6 @@ public class GameListener implements Listener {
                 }
             }
         }
-    }
-
-    @EventHandler
-    public void onPlayerDropItem(PlayerDropItemEvent event) {
-        ItemStack is = event.getItemDrop().getItemStack();
-        String data = new NBTItem(is).getString("data");
-
-        if (data != null && data.equals("compass-item")) {
-            Player player = event.getPlayer();
-            Inventory inv = player.getInventory();
-
-            // Get the current item slot from player hand
-            int dropSlot = player.getInventory().getHeldItemSlot();
-
-            // Here
-
-            int indexToMove = -1;
-            if (dropSlot > 8) {
-                for (int i = 8; i >= 0; i--) {
-                    if (inv.getItem(i) == null) {
-                        indexToMove = i;
-                        break;
-                    }
-                }
-            }
-
-            if (indexToMove != -1) {
-                inv.setItem(indexToMove, is);
-            } else {
-                for (int i = 9; i < 36; i++) {
-                    if (inv.getItem(i) == null) {
-                        inv.setItem(i, is);
-                        break;
-                    }
-                }
-            }
-            
-        }
-    }
-
-    /*@EventHandler
-    public void onCompassDrop(ItemSpawnEvent e) {
-        ItemStack is = e.getEntity().getItemStack();
-        if (is == null) return;
-        String data = new NBTItem(is).getString("data");
-        if (data == null) return;
-        if (data.equals("compass-item")) e.setCancelled(true);
-    }*/
-
-    /*@EventHandler
-    public void onCompassDrop(PlayerDropItemEvent e) {
-        ItemStack is = e.getItemDrop().getItemStack();
-        if (is == null) return;
-        String data = new NBTItem(is).getString("data");
-        if (data == null) return;
-        if (!data.equals("compass-item")) return;
-
-        Player player = e.getPlayer();
-        Inventory inv = player.getInventory();
-
-        // Cancel the drop event
-        e.setCancelled(true);
-
-        // Clone the item
-        //ItemStack isClone = is.clone();
-
-        // Remove all similar items from the player's inventory
-        //inv.remove(is);
-
-        // Find first empty slot in the inventory
-        //int firstEmptySlot = inv.firstEmpty();
-        //if (firstEmptySlot != -1) {
-        //    // Add the cloned item back into the player's inventory at the first available slot
-        //    inv.setItem(firstEmptySlot, isClone);
-        //}
-
-        Bukkit.getServer().getScheduler().runTaskLater(Compass.getInstance(), () -> {
-            player.closeInventory();
-        }, 2L);
     }*/
 
     public void addToInventory(Player p) {

@@ -20,6 +20,7 @@ public class MenuListener implements Listener {
 
     @EventHandler
     public void onMenuClick(InventoryClickEvent e){
+        //Bukkit.broadcastMessage("CLICK FIRED: MenuListener 23");
         InventoryHolder holder = e.getInventory().getHolder();
         if (holder instanceof Menu) {
             e.setCancelled(true);
@@ -31,6 +32,7 @@ public class MenuListener implements Listener {
 
     @EventHandler
     public void onCompass(InventoryClickEvent e) {
+        //Bukkit.broadcastMessage("CLICK FIRED: MenuListener 35");
         //if (e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)) return;
         //NBTItem nbtItem = new NBTItem(e.getCurrentItem());
         //if (nbtItem.getString("data") == null) return;
@@ -45,6 +47,7 @@ public class MenuListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
+        //Bukkit.broadcastMessage("INTERACT FIRED: MenuListener 50");
         Player player = e.getPlayer();
         ItemStack is = Compass.getBedWars().getVersionSupport().getItemInHand(player);
         if (is == null) return;
